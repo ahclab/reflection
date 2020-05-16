@@ -31,7 +31,9 @@ word_attribute_transfer
 - Install packages according to the requirements
 - Download pre-trained [word2vec(GoogleNews-vectors-negative300.bin)](https://code.google.com/archive/p/word2vec/) and move it to ```data/word2vec/```
 - Download pre-trained [GloVe(glove.42B.300d.txt)]( https://nlp.stanford.edu/projects/glove/) and move it to ```data/glove/```
-- Conduct ```src/fix_glove_file.py``` for reading GloVe with gensim
+- Fix GloVe file to read it with gensim
+ 
+ ```$ fix_glove_file.py``` 
 
 ## Usage
 #### Demo
