@@ -33,7 +33,9 @@ word_attribute_transfer
 - Download pre-trained [GloVe(glove.42B.300d.txt)]( https://nlp.stanford.edu/projects/glove/) and move it to ```data/glove/```
 - Fix GloVe file to read it with gensim
  
- ```$ fix_glove_file.py``` 
+ ```
+ $ fix_glove_file.py
+ ``` 
 
 ## Usage
 #### Demo
