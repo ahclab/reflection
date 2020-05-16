@@ -39,7 +39,4 @@ word_attribute_transfer
 
 #### Experiment
 - Open and run ``notebooks/Ref+PM.ipynb``.
-  - Result files are saved in your drive  
-  ``/content/gdrive/My Drive/word_attribute_transfer_results``.
-  - The result directories are automatically created.
     
