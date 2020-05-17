@@ -104,6 +104,7 @@ def experiment1(settings):
               out, 
               snapshot_interval, 
               display_interval,
+              resume=resume,
               alpha=alpha,
               gpu=gpu) 
     else: # Evaluation only
