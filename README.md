@@ -12,6 +12,7 @@ Reflection-based Word Attribute Transfer
 - chainer >= 5.0
 - gensim  >= 3.7.3
 - numpy   >= 1.6.1
+- Jupyter Notebook
 
 ## Directory
 ```
