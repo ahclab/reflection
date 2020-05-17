@@ -63,19 +63,6 @@ def load_attribute_words(datasets, path_dataset, embedding_method):
                           'zs':numpy.asarray(dataset['zs_val']).astype(numpy.int32)}
         A_test[attr_id] = {'xs':dataset['xs_test'], 'ts':dataset['ts_test'],\
                            'zs':numpy.asarray(dataset['zs_test']).astype(numpy.int32)}
-        
-    '''
-    # Shuffle all pairs (複数の属性ペアがあるときに必要。)
-    def shuffle_data(x,t,z):
-        d_index = list(range(len(x)))    
-        random.seed(0) # seed = 0 固定
-        d_index = random.sample(d_index, len(d_index))
-        return [x[i] for i in d_index], [t[i] for i in d_index], [z[i] for i in d_index]
-
-    xs_train, ts_train, zs_train = shuffle_data(xs_train, ts_train, zs_train)
-    xs_val, ts_val, zs_val = shuffle_data(xs_val, ts_val, zs_val)
-    xs_test, ts_test, zs_test = shuffle_data(xs_test, ts_test, zs_test)
-    '''
 
     zs = numpy.asarray(zs).astype(numpy.int32)
     zs_train = numpy.asarray(zs_train).astype(numpy.int32)
@@ -89,7 +76,10 @@ def load_attribute_words(datasets, path_dataset, embedding_method):
 
 def get_non_attribute_words(num_N, M, F, vocab):
     '''
-        num_N: num of non-attribute words
+        Args
+            num_N: num of non-attribute words
+            M, F: attribute words
+            vocab: vocab of word2vec
     '''
     N = []
     n = copy.deepcopy(num_N)
@@ -108,10 +98,18 @@ def get_non_attribute_words(num_N, M, F, vocab):
 
 def load_datasets(datasets, word2vec, num_sampling, path_dataset, embedding_method):
     '''
-        e.g.
-        datasets = ['capital-country_109', 'male-female_101']
-        path_dataset = '../../data/datasets'
-        embedding_method = 'word2vec'
+        Args
+            datasets: list of datasets.  e.g. ['capital-country_109', 'male-female_101']
+            word2vec: word2vec instance
+            num_sampling: num of samplings of non-attribute words. e.g. 50
+            path_dataset: e.g.  '../../data/datasets'
+            embedding_method: word2vec or glove. e.g. 'word2vec'
+        Returns
+            xs_xxxx: input words. e.g. ['man', ...]
+            ts_xxxx: target words. e.g. ['woman', ...]
+            zs_xxxx: attribute ID. e.g. [0, ...]
+            A_xxxx: all attribute words
+            N_xxxx: all non-attribute words
     '''
     print('Loading dataset...')    
     xs_train, xs_val, xs_test, ts_train, ts_val, ts_test, \
@@ -119,8 +117,8 @@ def load_datasets(datasets, word2vec, num_sampling, path_dataset, embedding_meth
     A_val, A_test, z_ids = load_attribute_words(datasets, path_dataset, embedding_method)
     print('Dataset was loaded.')
     
-    # Negative sampling
-    if num_sampling: # n_sampling != 0
+    # Sampling non-attribute words
+    if num_sampling:
         vocab = list(word2vec.vocab.keys())
         vocab.sort() 
         print('Sampling non-attribute words from the vocabulary...')    
@@ -137,12 +135,3 @@ def load_datasets(datasets, word2vec, num_sampling, path_dataset, embedding_meth
     return xs_train, xs_val, xs_test, ts_train, ts_val, ts_test, zs_train, \
            zs_val, zs_test, M, F, xs, ts, zs, A_train, A_val, A_test, z_ids, N_train
 
-
-if __name__ == "__main__":
-    datasets = ['capital-country_109', 'male-female_101']
-    path_dataset = '../../data/datasets'
-    embedding_method = 'word2vec'
-    xs_train, xs_val, xs_test, ts_train, ts_val, \
-    ts_test, zs_train, zs_val, zs_test, M, F, xs, \
-    ts, zs, A_train, A_val, A_test, z_ids = load_attribute_words(datasets, path_dataset, embedding_method)
-    
