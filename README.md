@@ -16,7 +16,7 @@ Reflection-based Word Attribute Transfer
 
 ## Directory
 ```
-./
+reflection
   ├── data                             - Datasets
   ├── demos                            - A demo notebook and trained models
   ├── notebooks                        - Experimental notebooks
