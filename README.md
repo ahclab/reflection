@@ -17,12 +17,19 @@ Reflection-based Word Attribute Transfer
 ## Directory
 ```
 reflection
-  ├── data                             - Datasets
-  ├── demos                            - A demo notebook and trained models
-  ├── notebooks                        - Experimental notebooks
-  ├── src                              - Codes of word attribute transfers
-  │     ├── analogy_based_transfer     - Analogy-based word attribute transfer
-  │     ├── reflection_based_transfer  - Learning-based (Reflection and MLP) word attribute transfer
+  ├── data                             
+  │     ├── datasets                   - Datasets
+  │     ├── word2vec                   - Pre-trained word2vec
+  │     └── glove                      - Pre-trained GloVe
+  ├── demos
+  │     ├── demo.ipynb                 - Demo notebook
+  │     ├── models_word2vec            - Trained models
+  │     └── models_glove               - Trained models
+  ├── notebooks                        
+  │     └── Ref+PM.ipynb               - Experimental notebook
+  ├── src                              
+  │     ├── analogy_based_transfer     - Codes of analogy-based word attribute transfer
+  │     ├── reflection_based_transfer  - Codes of learning-based (Reflection and MLP) word attribute transfer
   │     └── fix_glove_file.py          - Script to fix GloVe file
   ├── LICENCE.txt
   └── README.md
