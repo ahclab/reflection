@@ -35,7 +35,7 @@ class AttributeTransferUpdater1(chainer.training.updaters.StandardUpdater):
         # Target word vector
         t = Variable(batch[2])
 
-        # Transform a word vector x to a word vector y based on an attribute z
+        # Transform a word vector x to a word vector y
         y = net(x, z)
 
         # Update
