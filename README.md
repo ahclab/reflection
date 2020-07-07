@@ -1,3 +1,5 @@
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.txt)
+
 Reflection-based Word Attribute Transfer
 ====
 - Demo: Demo of reflection-based word attribute transfers. 
