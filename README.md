@@ -55,3 +55,21 @@ reflection
 #### Experiment
 - Open and run ``notebooks/Ref+PM.ipynb``.
     
+ 
+## Citing
+```
+@inproceedings{ishibashi-etal-2020-reflection,
+    title = "Reflection-based Word Attribute Transfer",
+    author = "Ishibashi, Yoichi  and
+      Sudoh, Katsuhito  and
+      Yoshino, Koichiro  and
+      Nakamura, Satoshi",
+    booktitle = "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics: Student Research Workshop",
+    month = jul,
+    year = "2020",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/2020.acl-srw.8",
+    pages = "51--58"
+}
+```
