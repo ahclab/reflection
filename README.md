@@ -41,11 +41,20 @@ reflection
 ## Setup
 - Install packages according to the requirements
 - Download pre-trained [word2vec(GoogleNews-vectors-negative300.bin)(3.6GB)](https://code.google.com/archive/p/word2vec/) and move it to ```data/word2vec/```
+```
+$ cd reflection/data/word2vec
+$ wget -c https://s3.amazonaws.com/dl4j-distribution/GoogleNews-vectors-negative300.bin.gz
+$ gunzip GoogleNews-vectors-negative300.bin.gz
+```
+
 - Download pre-trained [GloVe(glove.42B.300d.txt)(5.0GB)]( https://nlp.stanford.edu/projects/glove/) and move it to ```data/glove/```
 - Fix GloVe file to read it with gensim
- 
- ```
- $ fix_glove_file.py
+```
+$ cd reflection/data/glove
+$ wget http://nlp.stanford.edu/data/glove.42B.300d.zip
+$ unzip glove.42B.300d.zip
+$ cd reflection/src
+$ python fix_glove_file.py
  ``` 
 
 ## Usage
