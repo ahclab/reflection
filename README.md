@@ -61,9 +61,9 @@ reflection
 @inproceedings{ishibashi-etal-2020-reflection,
     title = "Reflection-based Word Attribute Transfer",
     author = "Ishibashi, Yoichi  and
-      Sudoh, Katsuhito  and
-      Yoshino, Koichiro  and
-      Nakamura, Satoshi",
+              Sudoh, Katsuhito  and
+              Yoshino, Koichiro  and
+              Nakamura, Satoshi",
     booktitle = "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics: Student Research Workshop",
     month = jul,
     year = "2020",
