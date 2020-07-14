@@ -1,8 +1,6 @@
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.txt)
 
 Reflection-based Word Attribute Transfer
-
-(ACL'20 Student Student Research Workshop)
 ====
 - Demo: Demo of reflection-based word attribute transfers. 
 - Experiment: You can train models by using Jupyter notebooks.
