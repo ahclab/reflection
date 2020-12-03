@@ -23,7 +23,7 @@ $ gunzip GoogleNews-vectors-negative300.bin.gz
 - Download pre-trained [GloVe(glove.42B.300d.txt)(5.0GB)]( https://nlp.stanford.edu/projects/glove/) and move it to ```data/```
 - Fix GloVe file to read it with gensim
 ```
-$ cd reflection/data/glove
+$ cd reflection/data
 $ wget http://nlp.stanford.edu/data/glove.42B.300d.zip
 $ unzip glove.42B.300d.zip
 $ cd reflection/src
