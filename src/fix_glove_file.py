@@ -1,7 +1,7 @@
 '''
     Step1. Download pre-trained GloVe(glove.42B.300d.txt) 
     from( https://nlp.stanford.edu/projects/glove/) 
-    and put it in data/glove/
+    and put it in data/
 
     Step2. Run this script.
 '''
