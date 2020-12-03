@@ -116,7 +116,7 @@ def main():
     # Create train/val/test data
     if args.use_all_data:
         X_train, T_train, Z_train = [], [], []
-        for dtype, z, x, t in dataset:
+        for _, dtype, z, x, t in dataset:
             if type(t)==list:
                 for target in t:
                     X_train.append(x)
@@ -137,15 +137,15 @@ def main():
         train_loader = torch.utils.data.DataLoader(dataset1, **train_kwargs)
         print('created.')
     else:
-        X_train = [d[2] for d in dataset if d[0]=='train']
-        X_valid = [d[2] for d in dataset if d[0]=='valid']
-        X_test = [d[2] for d in dataset if d[0]=='test']
-        T_train = [d[3] for d in dataset if d[0]=='train']
-        T_valid = [d[3] for d in dataset if d[0]=='valid']
-        T_test = [d[3] for d in dataset if d[0]=='test']
-        Z_train = [ATTR2ID[d[1]] for d in dataset if d[0]=='train']
-        Z_valid = [ATTR2ID[d[1]] for d in dataset if d[0]=='valid']
-        Z_test = [ATTR2ID[d[1]] for d in dataset if d[0]=='test']
+        X_train = [d[3] for d in dataset if d[1]=='train']
+        X_valid = [d[3] for d in dataset if d[1]=='valid']
+        X_test = [d[3] for d in dataset if d[1]=='test']
+        T_train = [d[4] for d in dataset if d[1]=='train']
+        T_valid = [d[4] for d in dataset if d[1]=='valid']
+        T_test = [d[4] for d in dataset if d[1]=='test']
+        Z_train = [ATTR2ID[d[2]] for d in dataset if d[1]=='train']
+        Z_valid = [ATTR2ID[d[2]] for d in dataset if d[1]=='valid']
+        Z_test = [ATTR2ID[d[2]] for d in dataset if d[1]=='test']
     
         #assert len(X_valid) > 0
         #assert len(T_valid) > 0
