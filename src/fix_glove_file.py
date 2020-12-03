@@ -9,7 +9,7 @@
 from gensim.scripts.glove2word2vec import glove2word2vec
 
 if __name__ == '__main__':
-    path_old = '../data/glove/glove.42B.300d.txt' 
-    path_new = '../data/glove/glove.42B.300d_gensim.txt' 
+    path_old = '../data/glove.42B.300d.txt' 
+    path_new = '../data/glove.42B.300d_gensim.txt' 
 
     _ = glove2word2vec(path_old, path_new)
