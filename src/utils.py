@@ -40,7 +40,7 @@ def load_dataset(rate_invariant_words, attributes, seed, embedding):
     # Sampling invariant words for training
     r = rate_invariant_words
     assert 0 <= r <= 1
-    num_invariant_words = int((r/(1-r)) * len(attribute_words))
+    num_invariant_words = int(r/(1-r) * len(attribute_words))
     if num_invariant_words > len(invariant_words_train):
         num_invariant_words = len(invariant_words_train)
     random.seed(seed)
