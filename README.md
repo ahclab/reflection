@@ -31,13 +31,13 @@ $ python fix_glove_file.py
 ``` 
 
 ## Usage
-### Training
+### Training example
 ``` 
 $ python train.py --attr MF
 ``` 
-### Transfer test
+### Transfer test example
 ``` 
-$ python trans.py --attr MF --model-dir ./result/model 
+$ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
 ``` 
 
 ## Citing
