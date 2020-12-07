@@ -57,7 +57,7 @@ def main():
                         help='Use all data for final training (default: False)')
     parser.add_argument('--weight-sharing', action='store_true', default=False,
                         help='Use weight sharing (default: False)')
-    parser.add_argument('--invariant', type=int, default=0.5, 
+    parser.add_argument('--invariant', type=float, default=0.5, 
                         help='rate of invariant words for training (default: 0.5)')
     parser.add_argument('--batch-size', type=int, default=512, 
                         help='input batch size for training (default: 512)')
@@ -106,6 +106,7 @@ def main():
         valid_kwargs.update(cuda_kwargs)
     
     print('loading datasets...')
+    assert args.attr in ['MF', 'SP', 'CC', 'AN', 'joint']
     if args.attr=='joint':
         attributes = ['MF', 'SP', 'CC', 'AN']
     else:

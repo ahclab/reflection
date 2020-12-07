@@ -62,6 +62,8 @@ def main():
                         help='target attribute {MF, SP, CC, AN}')
     parser.add_argument('--src', type=str, default='',
                         help='path of source file. demo mode if no value is set')
+    parser.add_argument('--no-tokenize', action='store_true', default=False,
+                        help='disables tokenization (default: False)')
     parser.add_argument('--gpu', type=int, default=-1, 
                         help='gpu device id. -1 indicates cpu (default: -1)')
 
@@ -104,7 +106,10 @@ def main():
         # Transfer text file
         with open(args.src) as f:
             src = f.read().split('\n')
-        tokens = [nltk.word_tokenize(sentence) for sentence in src]
+        if args.no_tokenize:
+            tokens = [sentence.split(' ') for sentence in src]
+        else:
+            tokens = [nltk.word_tokenize(sentence) for sentence in src]
         z = ATTR2ID[args.attr]
         result = trasfer_from_tokens(model, device, tokens, z, word_embedding, demo_mode)
     

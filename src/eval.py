@@ -19,7 +19,7 @@ def trasfer(model, device, X, Z, word_embedding):
         >>> model = Ref_PM(300, 300).to(device)
         >>> model.load_state_dict(torch.load(model_path, map_location=device))
         >>> X = ["man", "boy", "sister", "girl", "lady"]
-        >>> Z = [0, ..., 0] # transfer target: gender
+        >>> Z = [0, 0, 0, 0, 0] # transfer target: gender
         >>> trasfer_words(model, device, X, Z, word_embedding)
              ["man", "boy", "sister", "girl", "lady"]
     '''
