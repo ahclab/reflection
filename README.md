@@ -31,11 +31,15 @@ $ python fix_glove_file.py
 ``` 
 
 ## Usage
-### Training example
+### Training
 ``` 
 $ python train.py --attr MF
 ``` 
-### Transfer test example
+### Evaluation
+``` 
+$ python eval.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
+``` 
+### Transfer test
 ``` 
 $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
 ``` 
