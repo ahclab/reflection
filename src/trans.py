@@ -43,14 +43,17 @@ def trasfer_from_tokens(model, device, tokens, z, word_embedding, demo_mode=Fals
                 x.append(word_embedding[word])
             except:
                 oov_word.append((i, word))
-        x = torch.from_numpy(np.array(x)).float()
-        output_vectors = predict(model, device, x, z)
-        output_words = []
-        for y in output_vectors:
-            output_words.append(word_embedding.similar_by_vector(y, 1)[0][0])
-        for i, oov in enumerate(oov_word):
-            output_words.insert(oov[0], oov[1])
-        result.append(output_words)
+        if x==[]:
+            result.append(sentence)  # result becomes the input if oov tokens only
+        else:
+            x = torch.from_numpy(np.array(x)).float()
+            output_vectors = predict(model, device, x, z)
+            output_words = []
+            for y in output_vectors:
+                output_words.append(word_embedding.similar_by_vector(y, 1)[0][0])
+            for i, oov in enumerate(oov_word):
+                output_words.insert(oov[0], oov[1])
+            result.append(output_words)
     return result
 
 

@@ -66,7 +66,7 @@ def main():
 
     # Calculate accuracy and stability
     attributes = [args.attr]
-    dataset = utils.load_dataset(0, attributes, args.seed, args.emb)
+    dataset = utils.load_dataset(0, attributes, args.seed, args.emb, include_one_to_many_relation=True)
     #X_train = [d[3] for d in dataset if d[1]=='train' and d[0]=='A']
     #T_train = [d[4] for d in dataset if d[1]=='train' and d[0]=='A']
     #Z_train = [ATTR2ID[d[2]] for d in dataset if d[1]=='train' and d[0]=='A']

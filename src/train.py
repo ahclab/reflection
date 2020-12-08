@@ -114,26 +114,17 @@ def main():
     dataset = utils.load_dataset(args.invariant, attributes, args.seed, args.emb)
     print('loaded.')
     
+    # Load word embeddings
+    print('loading word embeddings...')
+    word_embedding = utils.load_word_embeddings(args.emb)
+    print('loaded.')
+    
     # Create train/val/test data
     if args.use_all_data:
-        X_train, T_train, Z_train = [], [], []
-        for _, dtype, z, x, t in dataset:
-            if type(t)==list:
-                for target in t:
-                    X_train.append(x)
-                    T_train.append(target)
-                    Z_train.append(ATTR2ID[z])
-            else:
-                X_train.append(x)
-                T_train.append(t)
-                Z_train.append(ATTR2ID[z])
-        print('loading word embeddings...')
-        word_embedding = utils.load_word_embeddings(args.emb)
-        print('loaded.')
         print('creating data loader')
-        X_train = torch.from_numpy(np.array([word_embedding[w] for w in X_train])).float()
-        T_train = torch.from_numpy(np.array([word_embedding[w] for w in T_train])).float()
-        Z_train = torch.from_numpy(np.array(Z_train))
+        X_train = torch.from_numpy(np.array([word_embedding[d[3]] for d in dataset])).float()
+        T_train = torch.from_numpy(np.array([word_embedding[d[4]] for d in dataset])).float()
+        Z_train = torch.from_numpy(np.array([ATTR2ID[d[2]] for d in dataset]))
         dataset1 = torch.utils.data.TensorDataset(X_train, T_train, Z_train)    
         train_loader = torch.utils.data.DataLoader(dataset1, **train_kwargs)
         print('created.')
@@ -151,11 +142,7 @@ def main():
         #assert len(X_valid) > 0
         #assert len(T_valid) > 0
         #assert len(Z_valid) > 0
-    
-        print('loading word embeddings...')
-        word_embedding = utils.load_word_embeddings(args.emb)
-        print('loaded.')
-        
+
         print('creating data loader')
         X_train = torch.from_numpy(np.array([word_embedding[w] for w in X_train])).float()
         T_train = torch.from_numpy(np.array([word_embedding[w] for w in T_train])).float()
