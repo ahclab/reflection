@@ -3,14 +3,6 @@
 Reflection-based Word Attribute Transfer
 ====
 
-## Requirements
-- python  >= 3.5
-- Pytorch >= 1.5.1
-- gensim  >= 3.7.3
-- numpy   >= 1.6.1
-- tqdm
-- nltk
-
 ## Setup
 - Install packages according to the requirements
 - Download pre-trained [word2vec(GoogleNews-vectors-negative300.bin)(3.6GB)](https://code.google.com/archive/p/word2vec/) and move it to ```data/```
