@@ -4,7 +4,7 @@ Reflection-based Word Attribute Transfer
 ====
 
 ## Setup
-- Install packages according to the requirements
+- Install packages according to ```requirements.txt```
 - Download pre-trained [word2vec(GoogleNews-vectors-negative300.bin)(3.6GB)](https://code.google.com/archive/p/word2vec/) and move it to ```data/```
 ```
 $ cd data
