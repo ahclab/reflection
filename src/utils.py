@@ -27,7 +27,7 @@ def reflection_numpy(x, a, c):
     return x - 2 * (np.dot(x-c, a)/np.dot(a, a)) * a
 
 
-def load_dataset(rate_invariant_words, attributes, seed, embedding, include_one_to_many_relation=False):
+def load_dataset(rate_invariant_words, attributes, seed, embedding, include_one_to_many_data=False):
     # Load A nad N dataset
     with open(path_dataset + '/datasets_' + embedding + '.json') as f:
         dataset = json.load(f)
@@ -38,7 +38,7 @@ def load_dataset(rate_invariant_words, attributes, seed, embedding, include_one_
     invariant_words_test = [d for d in invariant_words if d[1] == 'test']
     
     # Fix data
-    attribute_words = many_to_one(attribute_words) if not include_one_to_many_relation else attribute_words
+    attribute_words = many_to_one(attribute_words) if not include_one_to_many_data else attribute_words
     
     # Sampling invariant words for training
     r = rate_invariant_words
@@ -63,7 +63,7 @@ def get_device(gpu_id=-1):
     
 def many_to_one(attribute_words):
     '''
-        Fix data which inclued one-to-many relations
+        Fix data format which inclued one-to-many relations
         to be one-to-one relation for AN dataset
         
         Examples:
@@ -77,10 +77,10 @@ def many_to_one(attribute_words):
                      ('A', 'valid', 'AN', 'good', 'terrible')]
     '''
     fixed_attribute_words = []
-    for _, dtype, z, x, t in attribute_words:
+    for wtype, dtype, z, x, t in attribute_words:
         if type(t)==list:
             for _t in t:
-                fixed_attribute_words.append((_, dtype, z, x, _t))
+                fixed_attribute_words.append((wtype, dtype, z, x, _t))
         else:
-            fixed_attribute_words.append((_, dtype, z, x, t))
+            fixed_attribute_words.append((wtype, dtype, z, x, t))
     return fixed_attribute_words
