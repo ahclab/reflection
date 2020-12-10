@@ -31,11 +31,11 @@ $ python fix_glove_file.py
 ``` 
 
 ## Usage
-### Training
+### Training example
 ``` 
 $ python train.py --attr MF --save-model
 ``` 
-### Evaluation
+### Evaluation example
 ``` 
 $ python eval.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
 ``` 
