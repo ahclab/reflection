@@ -9,6 +9,13 @@ import torch
 import utils
 from nets import Ref_PM, Ref_PM_Share
 
+'''
+    Attributes:
+        MF: male-female
+        SP: singular-plural
+        CC: capital-country
+        AN: antonym
+'''
 ATTR2ID = {'MF':0, 'SP':1, 'CC':2, 'AN':3}
 
 
@@ -49,10 +56,10 @@ def test(model, device, valid_loader, dtype):
 def main():
     # Training settings
     parser = argparse.ArgumentParser(description='PyTorch Reflection-based Word Attribute Transfer Example')
-    parser.add_argument('--emb', type=str, default='word2vec', 
-                        help='word embeddings: word2vec or glove (default: word2vec)')
-    parser.add_argument('--attr', type=str, default='MF', 
-                        help='attribute {MF, SP, CC, AN, joint} (default: MF)')
+    parser.add_argument('--emb', type=str, default='glove', 
+                        help='word embeddings: word2vec or glove (default: glove)')
+    parser.add_argument('--attr', type=str, default='joint', 
+                        help='attribute {MF, SP, CC, AN, joint} (default: joint)')
     parser.add_argument('--use-all-data', action='store_true', default=False,
                         help='Use all data for final training (default: False)')
     parser.add_argument('--weight-sharing', action='store_true', default=False,
@@ -63,8 +70,8 @@ def main():
                         help='input batch size for training (default: 512)')
     parser.add_argument('--valid-batch-size', type=int, default=1000, 
                         help='input batch size for testing (default: 1000)')
-    parser.add_argument('--epochs', type=int, default=100, 
-                        help='number of epochs to train (default: 100)')
+    parser.add_argument('--epochs', type=int, default=10000, 
+                        help='number of epochs to train (default: 10000)')
     parser.add_argument('--lr', type=float, default=0.0001, 
                         help='learning rate (default: 0.0001)')
     #parser.add_argument('--gamma', type=float, default=1.0, 
@@ -180,9 +187,10 @@ def main():
         train_loss = train(args, model, device, train_loader, optimizer, epoch)
         if not args.use_all_data:
             valid_loss = test(model, device, valid_loader, 'Valid')
+            training_loop.set_description("Train Epoch %d | Train Loss: %f | Valid Loss: %f" % (epoch, train_loss, valid_loss))
         else:
-            valid_loss = -1.0
-        training_loop.set_description("Train Epoch %d | Train Loss: %f | Valid Loss: %f" % (epoch, train_loss, valid_loss))
+            training_loop.set_description("Train Epoch %d | Train Loss: %f" % (epoch, train_loss))
+        
         #scheduler.step()
         if args.dry_run:
             break
@@ -202,12 +210,12 @@ def main():
         with open('{}/args.json'.format(path_save), 'w') as f:
             json.dump(args.__dict__, f)
         torch.save(model.state_dict(), "{}/model.pt".format(path_save))
-        print('saved in ' + path_save)
+        print('saved. ' + path_save)
 
         
 if __name__ == '__main__':
     '''
         Example:
-            $ python train.py --sigma 0.1 --save-model --attr MF
+            $ python train.py --save-model --attr joint
     '''
     main()

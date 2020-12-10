@@ -9,6 +9,13 @@ import utils
 import trans
 from nets import Ref_PM, Ref_PM_Share
 
+'''
+    Attributes:
+        MF: male-female
+        SP: singular-plural
+        CC: capital-country
+        AN: antonym
+'''
 ATTR2ID = {'MF':0, 'SP':1, 'CC':2, 'AN':3}
 
 
@@ -21,7 +28,7 @@ def trasfer(model, device, X, Z, word_embedding):
         >>> X = ["man", "boy", "sister", "girl", "lady"]
         >>> Z = [0, 0, 0, 0, 0] # transfer target: gender
         >>> trasfer_words(model, device, X, Z, word_embedding)
-             ["man", "boy", "sister", "girl", "lady"]
+                ["man", "boy", "sister", "girl", "lady"]
     '''
     X = torch.from_numpy(np.array([word_embedding[w] for w in X])).float()
     Z = torch.from_numpy(np.array(Z))
@@ -67,6 +74,7 @@ def main():
     # Calculate accuracy and stability
     attributes = [args.attr]
     dataset = utils.load_dataset(0, attributes, args.seed, args.emb, include_one_to_many_relation=True)
+    print('calculating accuracy...')
     #X_train = [d[3] for d in dataset if d[1]=='train' and d[0]=='A']
     #T_train = [d[4] for d in dataset if d[1]=='train' and d[0]=='A']
     #Z_train = [ATTR2ID[d[2]] for d in dataset if d[1]=='train' and d[0]=='A']
@@ -79,7 +87,6 @@ def main():
     #Y_valid = trasfer(model, device, X_valid, Z_valid, word_embedding)
     #accuracy = mean([1 if y==t else 0 for y, t zip(Y_valid, T_valid)])
     #print('accuracy: %f' % accuracy)
-    print('calculating accuracy...')
     X_test = [d[3] for d in dataset if d[1]=='test' and d[0]=='A']
     T_test = [d[4] for d in dataset if d[1]=='test' and d[0]=='A']
     Z_test = [ATTR2ID[d[2]] for d in dataset if d[1]=='test' and d[0]=='A']
@@ -98,6 +105,6 @@ def main():
 if __name__ == '__main__':
     '''
         Example:
-            $ python eval.py --attr MF --model-dir ./result/model
+            $ python eval.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
     '''
     main()

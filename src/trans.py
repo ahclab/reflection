@@ -62,7 +62,7 @@ def main():
     parser.add_argument('--model-dir', type=str, 
                         help='model directory')
     parser.add_argument('--attr', type=str, 
-                        help='target attribute {MF, SP, CC, AN}')
+                        help='target attribute to transfer {MF, SP, CC, AN}')
     parser.add_argument('--src', type=str, default='',
                         help='path of source file. demo mode if no value is set')
     parser.add_argument('--no-tokenize', action='store_true', default=False,
@@ -98,17 +98,19 @@ def main():
     # Transfer
     demo_mode = True if not args.src else False
     if demo_mode:
-        print('\n[Demo mode]')
+        print('\n[demo mode]')
         while(1):
-            sentence = input('Input:  ')
+            sentence = input('input:  ')
             tokens = [nltk.word_tokenize(sentence)]
             z = ATTR2ID[args.attr]
             result = trasfer_from_tokens(model, device, tokens, z, word_embedding, demo_mode)
-            print('Output: ' + ' '.join(result[0]))
+            print('output: ' + ' '.join(result[0]))
     else:
         # Transfer text file
         with open(args.src) as f:
             src = f.read().split('\n')
+        if args.emb=='glove':
+            src = list(map(str.lower, src))
         if args.no_tokenize:
             tokens = [sentence.split(' ') for sentence in src]
         else:
@@ -118,14 +120,16 @@ def main():
     
         # Save result
         filename = args.src.split('/')[-1].split('.')[0]
-        with open(args.model_dir + '/result_' + args.attr + '_' + filename + '.txt', 'w') as f:
+        path = args.model_dir + '/result_' + args.attr + '_' + filename + '.txt'
+        with open(path, 'w') as f:
             r = '\n'.join([' '.join(tokens) for tokens in result])
             f.write(r)
+        print('results are saved at ', path)
         
 if __name__ == '__main__':
     '''
         Example:
-            $ python trans.py --attr MF --model-dir ./result/model 
-            $ python trans.py --attr MF --model-dir ./result/model --src test.txt
+            $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY] # domo mode
+            $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY] --src sentence_exmaple.txt
     '''
     main()
