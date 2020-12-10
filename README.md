@@ -33,15 +33,15 @@ $ python fix_glove_file.py
 ## Usage
 ### Training
 ``` 
-$ python train.py --attr MF
+$ python train.py --attr joint
 ``` 
 ### Evaluation
 ``` 
-$ python eval.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
+$ python eval.py --attr joint --model-dir ./result/[MODEL DIRECTORY]
 ``` 
 ### Transfer test
 ``` 
-$ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
+$ python trans.py --attr joint --model-dir ./result/[MODEL DIRECTORY]
 ``` 
 
 ## Citing
