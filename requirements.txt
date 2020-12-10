@@ -1,0 +1,5 @@
+torch>=1.5.1
+gensim>=3.7.3
+numpy>=1.6.1
+nltk>=3.3
+tqdm
