@@ -64,7 +64,7 @@ def get_device(gpu_id=-1):
 def many_to_one(attribute_words):
     '''
         Fix data format which includes one-to-many relations 
-        to be the one-to-one format
+        to the one-to-one format
         
         Examples:
             >>> attribute_words = [(

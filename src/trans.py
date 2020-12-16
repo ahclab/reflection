@@ -96,13 +96,13 @@ def main():
     print('loaded.')
 
     # Transfer
+    z = ATTR2ID[args.attr]
     demo_mode = True if not args.src else False
     if demo_mode:
         print('\n[demo mode]')
         while(1):
             sentence = input('input:  ')
             tokens = [nltk.word_tokenize(sentence)]
-            z = ATTR2ID[args.attr]
             result = trasfer_from_tokens(model, device, tokens, z, word_embedding, demo_mode)
             print('output: ' + ' '.join(result[0]))
     else:
@@ -115,7 +115,6 @@ def main():
             tokens = [sentence.split(' ') for sentence in src]
         else:
             tokens = [nltk.word_tokenize(sentence) for sentence in src]
-        z = ATTR2ID[args.attr]
         result = trasfer_from_tokens(model, device, tokens, z, word_embedding, demo_mode)
     
         # Save result
