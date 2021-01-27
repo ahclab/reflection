@@ -1,8 +1,8 @@
 .ipynb_checkpoints/
 __pycache__/
 .DS_Store
-data/glove/glove.42B.300d_gensim.txt
-data/word2vec/GoogleNews-vectors-negative300.bin
+data/glove.42B.300d_gensim.txt
+data/GoogleNews-vectors-negative300.bin
 
 
 # Byte-compiled / optimized / DLL files
