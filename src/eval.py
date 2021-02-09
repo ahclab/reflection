@@ -41,7 +41,7 @@ def main():
     parser = argparse.ArgumentParser(description='PyTorch Reflection-based Word Attribute Transfer Example')
     parser.add_argument('--model-dir', type=str, 
                         help='model directory')
-    parser.add_argument('--attr', type=str, 
+    parser.add_argument('--attr', type=str, choices=["MF", "SP", "CC", "AN"],
                         help='target attribute {MF, SP, CC, AN}')
     parser.add_argument('--gpu', type=int, default=-1, 
                         help='gpu device id. -1 indicates cpu (default: -1)')
