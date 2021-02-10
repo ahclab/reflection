@@ -51,7 +51,7 @@ def test(model, device, valid_loader, dtype):
             output = model(x, z)
             test_loss += mse(output, target) # sum up batch loss
     return test_loss / len(valid_loader.dataset)
-    
+
 
 def main():
     # Training settings
@@ -63,7 +63,7 @@ def main():
     parser.add_argument('--use-all-data', action='store_true', default=False,
                         help='Use all data for final training (default: False)')
     parser.add_argument('--weight-sharing', action='store_true', default=False,
-                        help='Use weight sharing (default: False)')
+                        help='use weight sharing (default: False)')
     parser.add_argument('--invariant', type=float, default=0.5, 
                         help='rate of invariant words for training (default: 0.5)')
     parser.add_argument('--batch-size', type=int, default=512, 
@@ -90,12 +90,14 @@ def main():
                         help='quickly check a single pass')
     parser.add_argument('--seed', type=int, default=1, 
                         help='random seed (default: 1)')
-    parser.add_argument('--log-interval', type=int, default=10, 
-                        help='how many batches to wait before logging training status')
+    parser.add_argument('--log-interval', type=int, default=1000, 
+                        help='how many epochs to wait before logging training status')
     parser.add_argument('--fout', type=str, default='./result', 
                         help='output directory (default: ./result)')
     parser.add_argument('--save-model', action='store_true', default=False,
                         help='For Saving the current Model')
+    parser.add_argument('--model-dir', type=str, default='', 
+                        help='directory of model for retrain (default: )')
     args = parser.parse_args()
     print(json.dumps(args.__dict__, indent=2))
         
@@ -177,9 +179,22 @@ def main():
     else:
         model = Ref_PM(args.dim_x, args.dim_h).to(device)
         args.model = 'Ref+PM'
+    if args.model_dir:
+        model_path = args.model_dir + '/model.pt'
+        model.load_state_dict(torch.load(model_path, map_location=device))
+        print('model loaded.')
         
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
+    # Make dir
+    now = str(datetime.datetime.today()).replace(' ', '_').replace(':', '-').replace('.', '_')
+    experiment_name = '{}_{}_{}_{}'.format(args.emb, args.attr, args.model, now)
+    args.exp_name = experiment_name
+    path_save = '{}/{}'.format(args.fout, experiment_name)
+    os.makedirs(path_save, exist_ok=True)
+    with open('{}/args.json'.format(path_save), 'w') as f:
+        json.dump(args.__dict__, f)
+    
     # Training
     #scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
     training_loop = tqdm(range(1, args.epochs + 1))
@@ -195,6 +210,10 @@ def main():
         if args.dry_run:
             break
             
+        # Logging training status
+        if epoch % args.log_interval == 0 and args.save_model:
+            torch.save(model.state_dict(), "{}/model.pt".format(path_save))
+            
     # Test
     if not args.use_all_data:
         test_loss = test(model, device, test_loader, 'Test')
@@ -202,13 +221,6 @@ def main():
 
     # Save model
     if args.save_model:
-        now = str(datetime.datetime.today()).replace(' ', '_').replace(':', '-').replace('.', '_')
-        experiment_name = '{}_{}_{}_{}'.format(args.emb, args.attr, args.model, now)
-        args.exp_name = experiment_name
-        path_save = '{}/{}'.format(args.fout, experiment_name)
-        os.makedirs(path_save, exist_ok=True)
-        with open('{}/args.json'.format(path_save), 'w') as f:
-            json.dump(args.__dict__, f)
         torch.save(model.state_dict(), "{}/model.pt".format(path_save))
         print('saved. ' + path_save)
 
