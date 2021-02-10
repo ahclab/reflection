@@ -73,25 +73,34 @@ def main():
 
     # Calculate accuracy and stability
     attributes = [args.attr]
-    dataset = utils.load_dataset(0, attributes, args.seed, args.emb, True)
+    include_one_to_many_data = True if args.attr=="AN" else False
+    dataset = utils.load_dataset(0, attributes, args.seed, args.emb, include_one_to_many_data)
     print('calculating accuracy...')
-    #X_train = [d[3] for d in dataset if d[1]=='train' and d[0]=='A']
-    #T_train = [d[4] for d in dataset if d[1]=='train' and d[0]=='A']
-    #Z_train = [ATTR2ID[d[2]] for d in dataset if d[1]=='train' and d[0]=='A']
-    #Y_train = trasfer(model, device, X_train, Z_train, word_embedding)
-    #accuracy = mean([1 if y==t else 0 for y, t zip(Y_train, T_train)])
-    #print('accuracy: %f' % accuracy)
-    #X_valid = [d[3] for d in dataset if d[1]=='valid'and d[0]=='A']
-    #T_valid = [d[4] for d in dataset if d[1]=='valid' and d[0]=='A']    
-    #Z_valid = [ATTR2ID[d[2]] for d in dataset if d[1]=='valid' and d[0]=='A']
-    #Y_valid = trasfer(model, device, X_valid, Z_valid, word_embedding)
-    #accuracy = mean([1 if y==t else 0 for y, t zip(Y_valid, T_valid)])
-    #print('accuracy: %f' % accuracy)
+    X_train = [d[3] for d in dataset if d[1]=='train' and d[0]=='A']
+    T_train = [d[4] for d in dataset if d[1]=='train' and d[0]=='A']
+    Z_train = [ATTR2ID[d[2]] for d in dataset if d[1]=='train' and d[0]=='A']
+    Y_train = trasfer(model, device, X_train, Z_train, word_embedding)
+    accuracy = mean([1 if y==t else 0 for y, t in zip(Y_train, T_train)])
+    print('accuracy: %f' % accuracy)
+    
+    X_valid = [d[3] for d in dataset if d[1]=='valid'and d[0]=='A']
+    T_valid = [d[4] for d in dataset if d[1]=='valid' and d[0]=='A']    
+    Z_valid = [ATTR2ID[d[2]] for d in dataset if d[1]=='valid' and d[0]=='A']
+    Y_valid = trasfer(model, device, X_valid, Z_valid, word_embedding)
+    if args.attr=="AN":
+        accuracy = mean([1 if y in t else 0 for y, t in zip(Y_valid, T_valid)])
+    else:
+        accuracy = mean([1 if y==t else 0 for y, t in zip(Y_valid, T_valid)])
+    print('accuracy: %f' % accuracy)
+    
     X_test = [d[3] for d in dataset if d[1]=='test' and d[0]=='A']
     T_test = [d[4] for d in dataset if d[1]=='test' and d[0]=='A']
     Z_test = [ATTR2ID[d[2]] for d in dataset if d[1]=='test' and d[0]=='A']
     Y_test = trasfer(model, device, X_test, Z_test, word_embedding)
-    accuracy = mean([1 if y==t else 0 for y, t in zip(Y_test, T_test)])
+    if args.attr=="AN":
+        accuracy = mean([1 if y in t else 0 for y, t in zip(Y_test, T_test)])
+    else:
+        accuracy = mean([1 if y==t else 0 for y, t in zip(Y_test, T_test)])
     print('accuracy: %f' % accuracy)
     
     print('calculating stability...')
