@@ -61,7 +61,7 @@ def main():
     parser = argparse.ArgumentParser(description='PyTorch Reflection-based Word Attribute Transfer Example')
     parser.add_argument('--model-dir', type=str, 
                         help='model directory')
-    parser.add_argument('--attr', type=str, 
+    parser.add_argument('--attr', type=str, choices=["MF", "SP", "CC", "AN"],
                         help='target attribute to transfer {MF, SP, CC, AN}')
     parser.add_argument('--src', type=str, default='',
                         help='path of source file. demo mode if no value is set')
@@ -96,13 +96,13 @@ def main():
     print('loaded.')
 
     # Transfer
-    z = ATTR2ID[args.attr]
     demo_mode = True if not args.src else False
     if demo_mode:
         print('\n[demo mode]')
         while(1):
             sentence = input('input:  ')
             tokens = [nltk.word_tokenize(sentence)]
+            z = ATTR2ID[args.attr]
             result = trasfer_from_tokens(model, device, tokens, z, word_embedding, demo_mode)
             print('output: ' + ' '.join(result[0]))
     else:
@@ -115,6 +115,7 @@ def main():
             tokens = [sentence.split(' ') for sentence in src]
         else:
             tokens = [nltk.word_tokenize(sentence) for sentence in src]
+        z = ATTR2ID[args.attr]
         result = trasfer_from_tokens(model, device, tokens, z, word_embedding, demo_mode)
     
         # Save result

@@ -3,9 +3,9 @@ import random
 import json
 import torch
 
-path_w2v = '../data/GoogleNews-vectors-negative300.bin' 
-path_glv = '../data/glove.42B.300d_gensim.txt' 
-path_dataset = '../data' 
+path_w2v = '/home/is/yoichi-is/Research/reflection/data/word2vec/GoogleNews-vectors-negative300.bin' 
+path_glv = '/home/is/yoichi-is/Research/reflection/data/glove/glove.42B.300d_gensim.txt' 
+path_dataset = '/home/is/yoichi-is/Research/reflection/data/datasets_20201130' 
     
 
 def load_word_embeddings(embedding):
@@ -64,7 +64,7 @@ def get_device(gpu_id=-1):
 def many_to_one(attribute_words):
     '''
         Fix data format which includes one-to-many relations 
-        to the one-to-one format
+        to be the one-to-one format
         
         Examples:
             >>> attribute_words = [(
