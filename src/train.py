@@ -98,6 +98,8 @@ def main():
                         help='For Saving the current Model')
     parser.add_argument('--model-dir', type=str, default='', 
                         help='directory of model for retrain (default: )')
+    parser.add_argument('--freqword', action='store_true', default=False,
+                        help='flag to use frequent words for the invariant word (default: False)')
     args = parser.parse_args()
     print(json.dumps(args.__dict__, indent=2))
         
@@ -120,7 +122,8 @@ def main():
         attributes = ['MF', 'SP', 'CC', 'AN']
     else:
         attributes = [args.attr]
-    dataset = utils.load_dataset(args.invariant, attributes, args.seed, args.emb)
+    dataset = utils.load_dataset(args.invariant, attributes, args.seed, args.emb, 
+                                use_frequent_invariant_words=args.freqword)
     print('loaded.')
     
     # Load word embeddings

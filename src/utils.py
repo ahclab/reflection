@@ -27,13 +27,16 @@ def reflection_numpy(x, a, c):
     return x - 2 * (np.dot(x-c, a)/np.dot(a, a)) * a
 
 
-def load_dataset(rate_invariant_words, attributes, seed, embedding, include_one_to_many_data=False):
+def load_dataset(rate_invariant_words, attributes, seed, embedding, 
+                 include_one_to_many_data=False, use_frequent_invariant_words=True):
     # Load A nad N dataset
     with open(path_dataset + '/datasets_' + embedding + '.json') as f:
         dataset = json.load(f)
     attribute_words = [d for d in dataset['A'] if d[2] in attributes]
-    #invariant_words = [d for d in dataset['N'] if d[2] in attributes]
-    invariant_words = [d for d in dataset['N_frequent_words'] if d[2] in attributes]
+    if use_frequent_invariant_words: # more stable type
+        invariant_words = [d for d in dataset['N_frequent_words'] if d[2] in attributes]
+    else:
+        invariant_words = [d for d in dataset['N'] if d[2] in attributes] # paper version
     invariant_words_train = [d for d in invariant_words if d[1] == 'train']
     invariant_words_test = [d for d in invariant_words if d[1] == 'test']
     
@@ -48,6 +51,7 @@ def load_dataset(rate_invariant_words, attributes, seed, embedding, include_one_
         num_invariant_words = len(invariant_words_train)
     random.seed(seed)
     invariant_words_train = random.sample(invariant_words_train, num_invariant_words)
+    print('#A, #N_train, #N_test')
     print(len(attribute_words), len(invariant_words_train), len(invariant_words_test))
     return attribute_words + invariant_words_train + invariant_words_test
     
