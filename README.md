@@ -53,4 +53,17 @@ $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
     url = "https://www.aclweb.org/anthology/2020.acl-srw.8",
     pages = "51--58"
 }
+
+@article{ishibashi-etal-2021-reflection,
+    title = "Reflection-based Word Attribute Transfer",
+    author = "Ishibashi, Yoichi  and
+              Sudoh, Katsuhito  and
+              Yoshino, Koichiro  and
+              Nakamura, Satoshi",
+    journal = {Journal of Natural Language Processing},
+    pages = "51--58"
+    volume={28},
+    number={1},
+    year = {2021}
+}
 ```
