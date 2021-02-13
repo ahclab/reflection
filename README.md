@@ -1,6 +1,7 @@
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.txt)
 
 Reflection-based Word Attribute Transfer
+[paper (ACL2021 SRW)](https://www.aclweb.org/anthology/2020.acl-srw.8.pdf)
 ====
 
 ## Setup
