@@ -118,8 +118,8 @@ def main():
                         help='For Saving the current Model')
     parser.add_argument('--model-dir', type=str, default='', 
                         help='directory of model for retrain (default: )')
-    parser.add_argument('--freqword', action='store_true', default=False,
-                        help='flag to use frequent words for the invariant word (default: False)')
+    parser.add_argument('--invariant_word_type', default="mix", choices=["noisy", "frequent", "mix"], 
+                        help='invariant word type (default: mix)')
     parser.add_argument('--valid_by_acc', action='store_true', default=False,
                         help='validation by accuracy (default: False)')
     args = parser.parse_args()
@@ -153,7 +153,7 @@ def main():
     if args.use_all_data:
         print('loading datasets...')
         dataset = utils.load_dataset(args.invariant, attributes, args.seed, args.emb, 
-                                     use_frequent_invariant_words=args.freqword)
+                                     invariant_word_type=args.invariant_word_type)
         print('loaded.')
         print('creating data loader')
         X_train = torch.from_numpy(np.array([word_embedding[d[3]] for d in dataset])).float()
@@ -167,7 +167,7 @@ def main():
         print('loading datasets...')
         dataset = utils.load_dataset(args.invariant, attributes, args.seed, args.emb, 
                                      include_one_to_many_data=include_one_to_many_data,
-                                     use_frequent_invariant_words=args.freqword)
+                                     invariant_word_type=args.invariant_word_type)
         print('loaded.')
         
         X_train = [d[3] for d in dataset if d[1]=='train']

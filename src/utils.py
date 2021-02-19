@@ -28,33 +28,47 @@ def reflection_numpy(x, a, c):
 
 
 def load_dataset(rate_invariant_words, attributes, seed, embedding, 
-                 include_one_to_many_data=False, use_frequent_invariant_words=True):
+                 include_one_to_many_data=False, invariant_word_type="mix", rate_mix=0.1):
     # Load A nad N dataset
     with open(path_dataset + '/datasets_' + embedding + '.json') as f:
         dataset = json.load(f)
-    attribute_words = [d for d in dataset['A'] if d[2] in attributes]
-    if use_frequent_invariant_words: # more stable type
-        invariant_words = [d for d in dataset['N_frequent_words'] if d[2] in attributes]
-    else:
-        invariant_words = [d for d in dataset['N'] if d[2] in attributes] # paper version
-    invariant_words_train = [d for d in invariant_words if d[1] == 'train']
-    invariant_words_test = [d for d in invariant_words if d[1] == 'test']
     
-    # Fix data
+    # Fix attribute word dataset
+    attribute_words = [d for d in dataset['A'] if d[2] in attributes]
     attribute_words = many_to_one(attribute_words) if not include_one_to_many_data else attribute_words
     
-    # Sampling invariant words for training
+    # Choose invariant word dataset
+    if invariant_word_type == "frequent": 
+        invariant_words = [d for d in dataset['N_frequent_words'] if d[2] in attributes]
+        invariant_words_train = [d for d in invariant_words if d[1] == 'train']
+        invariant_words_test = [d for d in invariant_words if d[1] == 'test']
+    elif invariant_word_type == "noisy":
+        invariant_words = [d for d in dataset['N'] if d[2] in attributes] # paper version
+        invariant_words_train = [d for d in invariant_words if d[1] == 'train']
+        invariant_words_test = [d for d in invariant_words if d[1] == 'test']
+    elif invariant_word_type == "mix": # most stable type
+        invariant_words_1 = [d for d in dataset['N_frequent_words'] if d[2] in attributes]
+        invariant_words_2 = [d for d in dataset['N'] if d[2] in attributes]
+        #random.seed(seed)
+        n_add = int(len(invariant_words_1) * rate_mix)
+        invariant_words = invariant_words_1 + random.sample(invariant_words_2, n_add)    
+        invariant_words_train = [d for d in invariant_words if d[1] == 'train']
+        invariant_words_test = [d for d in invariant_words_2 if d[1] == 'test']
+        
+    # Get number of sampled invariant words 
     r = rate_invariant_words
     assert 0 <= r < 1
     num_invariant_words = int(r/(1-r) * len(attribute_words))
     if num_invariant_words > len(invariant_words_train):
         num_invariant_words = len(invariant_words_train)
+        
+    # Sampling invariant words
     random.seed(seed)
     invariant_words_train = random.sample(invariant_words_train, num_invariant_words)
     print('#A, #N_train, #N_test')
-    print(len(attribute_words), len(invariant_words_train), len(invariant_words_test))
+    print(len(attribute_words), len(invariant_words_train), len(invariant_words_test)) 
     return attribute_words + invariant_words_train + invariant_words_test
-    
+        
     
 def get_device(gpu_id=-1):
     if gpu_id >= 0 and torch.cuda.is_available():

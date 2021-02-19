@@ -129,7 +129,9 @@ def main():
 if __name__ == '__main__':
     '''
         Example:
-            $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY] # domo mode
-            $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY] --src sentence_example.txt
+            # domo mode
+            $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
+            # transfer docs
+            $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY] --src ../data/sentence_example.txt
     '''
     main()

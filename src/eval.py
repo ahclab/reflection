@@ -75,7 +75,7 @@ def main():
     attributes = [args.attr]
     include_one_to_many_data = True if args.attr=="AN" else False
     dataset = utils.load_dataset(0, attributes, args.seed, args.emb, 
-                                 include_one_to_many_data, args.freqword)
+                                 include_one_to_many_data, args.invariant_word_type)
     print('calculating accuracy...')
     X_train = [d[3] for d in dataset if d[1]=='train' and d[0]=='A']
     T_train = [d[4] for d in dataset if d[1]=='train' and d[0]=='A']
