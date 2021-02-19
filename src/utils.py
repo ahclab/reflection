@@ -38,12 +38,12 @@ def load_dataset(rate_invariant_words, attributes, seed, embedding,
     attribute_words = many_to_one(attribute_words) if not include_one_to_many_data else attribute_words
     
     # Choose invariant word dataset
-    if invariant_word_type == "frequent": 
+    if invariant_word_type == "frequent": # stable
         invariant_words = [d for d in dataset['N_frequent_words'] if d[2] in attributes]
         invariant_words_train = [d for d in invariant_words if d[1] == 'train']
         invariant_words_test = [d for d in invariant_words if d[1] == 'test']
     elif invariant_word_type == "noisy":
-        invariant_words = [d for d in dataset['N'] if d[2] in attributes] # paper version
+        invariant_words = [d for d in dataset['N'] if d[2] in attributes] # paper
         invariant_words_train = [d for d in invariant_words if d[1] == 'train']
         invariant_words_test = [d for d in invariant_words if d[1] == 'test']
     elif invariant_word_type == "mix": # most stable type
@@ -68,7 +68,7 @@ def load_dataset(rate_invariant_words, attributes, seed, embedding,
     print('#A, #N_train, #N_test')
     print(len(attribute_words), len(invariant_words_train), len(invariant_words_test)) 
     return attribute_words + invariant_words_train + invariant_words_test
-        
+    
     
 def get_device(gpu_id=-1):
     if gpu_id >= 0 and torch.cuda.is_available():
