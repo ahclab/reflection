@@ -21,23 +21,23 @@ $ wget http://nlp.stanford.edu/data/glove.42B.300d.zip
 $ unzip glove.42B.300d.zip
 $ cd ../src
 $ python fix_glove_file.py
-``` 
+```
 
 ## Usage
 ### Training example
 ``` 
 $ python train.py --attr MF --save-model
-``` 
+```
 ### Evaluation example
 ``` 
 $ python eval.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
-``` 
+```
 ### Transfer test
 ``` 
 $ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
-``` 
+```
 
-## Citing
+## Citation
 ```
 @inproceedings{ishibashi-etal-2020-reflection,
     title = "Reflection-based Word Attribute Transfer",

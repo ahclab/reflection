@@ -59,9 +59,9 @@ def trasfer_from_tokens(model, device, tokens, z, word_embedding, demo_mode=Fals
 
 def main():
     parser = argparse.ArgumentParser(description='PyTorch Reflection-based Word Attribute Transfer Example')
-    parser.add_argument('--model-dir', type=str, 
+    parser.add_argument('--model-dir', type=str, required=True,
                         help='model directory')
-    parser.add_argument('--attr', type=str, choices=["MF", "SP", "CC", "AN"],
+    parser.add_argument('--attr', type=str, choices=["MF", "SP", "CC", "AN"], required=True,
                         help='target attribute to transfer {MF, SP, CC, AN}')
     parser.add_argument('--src', type=str, default='',
                         help='path of source file. demo mode if no value is set')

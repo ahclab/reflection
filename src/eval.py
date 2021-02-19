@@ -39,9 +39,9 @@ def trasfer(model, device, X, Z, word_embedding):
 
 def main():
     parser = argparse.ArgumentParser(description='PyTorch Reflection-based Word Attribute Transfer Example')
-    parser.add_argument('--model-dir', type=str, 
+    parser.add_argument('--model-dir', type=str, required=True,
                         help='model directory')
-    parser.add_argument('--attr', type=str, choices=["MF", "SP", "CC", "AN"],
+    parser.add_argument('--attr', type=str, choices=["MF", "SP", "CC", "AN"], required=True,
                         help='target attribute {MF, SP, CC, AN}')
     parser.add_argument('--gpu', type=int, default=-1, 
                         help='gpu device id. -1 indicates cpu (default: -1)')
@@ -74,7 +74,8 @@ def main():
     # Calculate accuracy and stability
     attributes = [args.attr]
     include_one_to_many_data = True if args.attr=="AN" else False
-    dataset = utils.load_dataset(0, attributes, args.seed, args.emb, include_one_to_many_data)
+    dataset = utils.load_dataset(0, attributes, args.seed, args.emb, 
+                                 include_one_to_many_data, args.freqword)
     print('calculating accuracy...')
     X_train = [d[3] for d in dataset if d[1]=='train' and d[0]=='A']
     T_train = [d[4] for d in dataset if d[1]=='train' and d[0]=='A']

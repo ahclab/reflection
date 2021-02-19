@@ -3,10 +3,12 @@ import argparse
 import json
 import os
 import datetime
+from statistics import mean
 from tqdm import tqdm
 import torch
 #from torch.optim.lr_scheduler import StepLR
 import utils
+import eval
 from nets import Ref_PM, Ref_PM_Share
 
 '''
@@ -51,6 +53,24 @@ def test(model, device, valid_loader, dtype):
             output = model(x, z)
             test_loss += mse(output, target) # sum up batch loss
     return test_loss / len(valid_loader.dataset)
+
+
+def get_valid_score(model, device, valid_data, word_embedding):
+    X_valid, Z_valid, T_valid = valid_data
+    Y_valid = eval.trasfer(model, device, X_valid, Z_valid, word_embedding)
+    accuracy = []
+    for y, t in zip(Y_valid, T_valid):
+        if type(t)==list:
+            if y in t:
+                accuracy.append(1)
+            else:
+                accuracy.append(0)
+        else:
+            if y==t:
+                accuracy.append(1)
+            else:
+                accuracy.append(0)
+    return mean(accuracy)
 
 
 def main():
@@ -100,6 +120,8 @@ def main():
                         help='directory of model for retrain (default: )')
     parser.add_argument('--freqword', action='store_true', default=False,
                         help='flag to use frequent words for the invariant word (default: False)')
+    parser.add_argument('--valid_by_acc', action='store_true', default=False,
+                        help='validation by accuracy (default: False)')
     args = parser.parse_args()
     print(json.dumps(args.__dict__, indent=2))
         
@@ -115,24 +137,24 @@ def main():
                        'shuffle': True}
         train_kwargs.update(cuda_kwargs)
         valid_kwargs.update(cuda_kwargs)
-    
-    print('loading datasets...')
-    assert args.attr in ['MF', 'SP', 'CC', 'AN', 'joint']
-    if args.attr=='joint':
-        attributes = ['MF', 'SP', 'CC', 'AN']
-    else:
-        attributes = [args.attr]
-    dataset = utils.load_dataset(args.invariant, attributes, args.seed, args.emb, 
-                                use_frequent_invariant_words=args.freqword)
-    print('loaded.')
-    
+        
     # Load word embeddings
     print('loading word embeddings...')
     word_embedding = utils.load_word_embeddings(args.emb)
     print('loaded.')
     
+    assert args.attr in ['MF', 'SP', 'CC', 'AN', 'joint']
+    if args.attr=='joint':
+        attributes = ['MF', 'SP', 'CC', 'AN']
+    else:
+        attributes = [args.attr]
+    
     # Create train/val/test data
     if args.use_all_data:
+        print('loading datasets...')
+        dataset = utils.load_dataset(args.invariant, attributes, args.seed, args.emb, 
+                                     use_frequent_invariant_words=args.freqword)
+        print('loaded.')
         print('creating data loader')
         X_train = torch.from_numpy(np.array([word_embedding[d[3]] for d in dataset])).float()
         T_train = torch.from_numpy(np.array([word_embedding[d[4]] for d in dataset])).float()
@@ -141,6 +163,13 @@ def main():
         train_loader = torch.utils.data.DataLoader(dataset1, **train_kwargs)
         print('created.')
     else:
+        include_one_to_many_data = True if args.valid_by_acc else False
+        print('loading datasets...')
+        dataset = utils.load_dataset(args.invariant, attributes, args.seed, args.emb, 
+                                     include_one_to_many_data=include_one_to_many_data,
+                                     use_frequent_invariant_words=args.freqword)
+        print('loaded.')
+        
         X_train = [d[3] for d in dataset if d[1]=='train']
         X_valid = [d[3] for d in dataset if d[1]=='valid']
         X_test = [d[3] for d in dataset if d[1]=='test']
@@ -151,28 +180,27 @@ def main():
         Z_valid = [ATTR2ID[d[2]] for d in dataset if d[1]=='valid']
         Z_test = [ATTR2ID[d[2]] for d in dataset if d[1]=='test']
     
-        #assert len(X_valid) > 0
-        #assert len(T_valid) > 0
-        #assert len(Z_valid) > 0
-
         print('creating data loader')
         X_train = torch.from_numpy(np.array([word_embedding[w] for w in X_train])).float()
         T_train = torch.from_numpy(np.array([word_embedding[w] for w in T_train])).float()
         Z_train = torch.from_numpy(np.array(Z_train))
-        X_valid = torch.from_numpy(np.array([word_embedding[w] for w in X_valid])).float()
-        T_valid = torch.from_numpy(np.array([word_embedding[w] for w in T_valid])).float()
-        Z_valid = torch.from_numpy(np.array(Z_valid))
-        X_test = torch.from_numpy(np.array([word_embedding[w] for w in X_test])).float()
-        T_test = torch.from_numpy(np.array([word_embedding[w] for w in T_test])).float()
-        Z_test = torch.from_numpy(np.array(Z_test))
-        
-        dataset1 = torch.utils.data.TensorDataset(X_train, T_train, Z_train)
-        dataset2 = torch.utils.data.TensorDataset(X_valid, T_valid, Z_valid)
-        dataset3 = torch.utils.data.TensorDataset(X_test, T_test, Z_test)
-    
+        dataset1 = torch.utils.data.TensorDataset(X_train, T_train, Z_train)        
         train_loader = torch.utils.data.DataLoader(dataset1, **train_kwargs)
-        valid_loader = torch.utils.data.DataLoader(dataset2, **valid_kwargs)
-        test_loader = torch.utils.data.DataLoader(dataset3, **valid_kwargs)
+        
+        if not args.valid_by_acc:
+            X_valid = torch.from_numpy(np.array([word_embedding[w] for w in X_valid])).float()
+            T_valid = torch.from_numpy(np.array([word_embedding[w] for w in T_valid])).float()
+            Z_valid = torch.from_numpy(np.array(Z_valid))
+            X_test = torch.from_numpy(np.array([word_embedding[w] for w in X_test])).float()
+            T_test = torch.from_numpy(np.array([word_embedding[w] for w in T_test])).float()
+            Z_test = torch.from_numpy(np.array(Z_test))
+            dataset2 = torch.utils.data.TensorDataset(X_valid, T_valid, Z_valid)
+            dataset3 = torch.utils.data.TensorDataset(X_test, T_test, Z_test)
+            valid_loader = torch.utils.data.DataLoader(dataset2, **valid_kwargs)
+            test_loader = torch.utils.data.DataLoader(dataset3, **valid_kwargs)
+        else:
+            valid_data = (X_valid, Z_valid, T_valid)
+            test_data = (X_test, Z_test, T_test)
         print('created.')
     
     # Set model
@@ -198,35 +226,44 @@ def main():
     with open('{}/args.json'.format(path_save), 'w') as f:
         json.dump(args.__dict__, f)
     
+    if args.dry_run:
+        args.epochs = 1
+    
     # Training
     #scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
+    best_score, best_loss = -1, 1e+10
+    save_flag = False
     training_loop = tqdm(range(1, args.epochs + 1))
     for epoch in training_loop:
         train_loss = train(args, model, device, train_loader, optimizer, epoch)
-        if not args.use_all_data:
-            valid_loss = test(model, device, valid_loader, 'Valid')
-            training_loop.set_description("Train Epoch %d | Train Loss: %f | Valid Loss: %f" % (epoch, train_loss, valid_loss))
-        else:
+        if args.use_all_data:
             training_loop.set_description("Train Epoch %d | Train Loss: %f" % (epoch, train_loss))
-        
+        elif epoch % args.log_interval == 0:
+            if args.valid_by_acc:
+                valid_score = get_valid_score(model, device, valid_data, word_embedding)
+                training_loop.set_description("Train Epoch %d | Train Loss: %f | Valid Score: %f" % (epoch, train_loss, valid_score))
+                save_flag = True if valid_score > best_score else False
+            else:
+                valid_loss = test(model, device, valid_loader, 'Valid')
+                training_loop.set_description("Train Epoch %d | Train Loss: %f | Valid Loss: %f" % (epoch, train_loss, valid_loss))
+                save_flag = True if valid_loss < best_loss else False
         #scheduler.step()
-        if args.dry_run:
-            break
-            
+        
         # Logging training status
-        if epoch % args.log_interval == 0 and args.save_model:
-            torch.save(model.state_dict(), "{}/model.pt".format(path_save))
-            
+        if args.save_model and epoch % args.log_interval == 0:
+            if args.use_all_data or save_flag:
+                torch.save(model.state_dict(), "{}/model.pt".format(path_save))
     # Test
+    model_path = "{}/model.pt".format(path_save)
+    model.load_state_dict(torch.load(model_path, map_location=device))
+    
     if not args.use_all_data:
-        test_loss = test(model, device, test_loader, 'Test')
-        print('Test Loss: {:.6f}'.format(test_loss))
-
-    # Save model
-    if args.save_model:
-        torch.save(model.state_dict(), "{}/model.pt".format(path_save))
-        print('saved. ' + path_save)
-
+        if args.valid_by_acc:
+            test_score = get_valid_score(model, device, valid_data, word_embedding)
+            print('Test Score: {:.6f}'.format(test_score))
+        else:
+            test_loss = test(model, device, test_loader, 'Test')
+            print('Test Loss: {:.6f}'.format(test_loss))
         
 if __name__ == '__main__':
     '''
