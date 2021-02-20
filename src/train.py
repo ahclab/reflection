@@ -242,13 +242,19 @@ def main():
             if args.valid_by_acc:
                 valid_score = get_valid_score(model, device, valid_data, word_embedding)
                 training_loop.set_description("Train Epoch %d | Train Loss: %f | Valid Score: %f" % (epoch, train_loss, valid_score))
-                save_flag = True if valid_score > best_score else False
-                best_score = valid_score
+                if valid_score > best_score:
+                    save_flag = True
+                    best_score = valid_score
+                else:
+                    save_flag = False
             else:
                 valid_loss = test(model, device, valid_loader, 'Valid')
                 training_loop.set_description("Train Epoch %d | Train Loss: %f | Valid Loss: %f" % (epoch, train_loss, valid_loss))
-                save_flag = True if valid_loss < best_loss else False
-                best_loss = valid_loss
+                if valid_loss < best_loss:
+                    save_flag = True
+                    best_loss = valid_loss
+                else:
+                    save_flag = False
         #scheduler.step()
         
         # Logging training status
