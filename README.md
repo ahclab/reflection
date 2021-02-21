@@ -34,7 +34,8 @@ $ python eval.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
 ```
 ### Transfer test
 ``` 
-$ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY]
+$ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY] # demo mode
+$ python trans.py --attr MF --model-dir ./result/[MODEL DIRECTORY] --src ../data/sentence_example.txt
 ```
 
 ## Citation
