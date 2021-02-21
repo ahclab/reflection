@@ -120,7 +120,7 @@ def main():
                         help='directory of model for retrain (default: )')
     parser.add_argument('--invariant_word_type', default="mix", choices=["noisy", "frequent", "mix"], 
                         help='invariant word type (default: mix)')
-    parser.add_argument('--valid_by_acc', action='store_true', default=False,
+    parser.add_argument('--valid_by_acc', action='store_true', default=True,
                         help='validation by accuracy (default: False)')
     args = parser.parse_args()
     print(json.dumps(args.__dict__, indent=2))
