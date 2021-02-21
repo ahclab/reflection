@@ -82,12 +82,12 @@ def main():
                         help='attribute {MF, SP, CC, AN, joint} (default: joint)')
     parser.add_argument('--use-all-data', action='store_true', default=False,
                         help='Use all data for final training (default: False)')
-    parser.add_argument('--weight-sharing', action='store_true', default=False,
+    parser.add_argument('--weight-sharing', action='store_true', default=True,
                         help='use weight sharing (default: False)')
     parser.add_argument('--invariant', type=float, default=0.9, 
                         help='rate of invariant words for training (default: 0.9)')
-    parser.add_argument('--batch-size', type=int, default=512, 
-                        help='input batch size for training (default: 512)')
+    parser.add_argument('--batch-size', type=int, default=4096, 
+                        help='input batch size for training (default: 4096)')
     parser.add_argument('--valid-batch-size', type=int, default=1000, 
                         help='input batch size for testing (default: 1000)')
     parser.add_argument('--epochs', type=int, default=10000, 
@@ -98,8 +98,8 @@ def main():
     #                    help='Learning rate step gamma (default: 1.0)')
     parser.add_argument('--dim-x', type=int, default=300, 
                         help='dim of word vectors (default: 300)')
-    parser.add_argument('--dim-h', type=int, default=300, 
-                        help='dim of hidden units (default: 300)')
+    parser.add_argument('--dim-h', type=int, default=3000, 
+                        help='dim of hidden units (default: 3000)')
     #parser.add_argument('--n-layers', type=int, default=5, 
     #                    help='num of layers (default: 5)')
     parser.add_argument('--sigma', type=float, default=0.1, 
@@ -110,7 +110,7 @@ def main():
                         help='quickly check a single pass')
     parser.add_argument('--seed', type=int, default=1, 
                         help='random seed (default: 1)')
-    parser.add_argument('--log-interval', type=int, default=1000, 
+    parser.add_argument('--log-interval', type=int, default=250, 
                         help='how many epochs to wait before logging training status')
     parser.add_argument('--fout', type=str, default='./result', 
                         help='output directory (default: ./result)')
